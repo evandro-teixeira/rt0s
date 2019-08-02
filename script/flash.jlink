@@ -1,0 +1,5 @@
+loadFile rt0s.hex
+r
+g
+q
+

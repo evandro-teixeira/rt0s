@@ -1,0 +1,9 @@
+target remote localhost:2331
+file rt0s.elf
+break _start
+monitor reset
+layout src
+layout regs
+winheight src +5
+refresh
+
