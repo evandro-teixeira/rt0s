@@ -257,9 +257,6 @@ _idx_to_thr_ptr:
 	adds r1, r0
 	bx lr
 
-.macro PENDSVSET
-.endm
-
 _start:
 	cpsid i
 	ldr r0, =.start_data
