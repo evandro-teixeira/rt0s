@@ -153,7 +153,7 @@ _thr_sem_check:
 	ldr r1, [r0,#8]
 	//check that semaphore's value
 	ldr r3, =sems
-	ldr r2, =4	//sizeof(sem)
+	movs r2, #4	//sizeof(sem)
 	muls r1, r2
 	//read
 	ldr r2, [r3,r1]
@@ -192,7 +192,7 @@ _fault:
 	ldr r0, =_retp
 	push {r0}	//PC
 	push {r0}	//LR
-	ldr r0, =0
+	movs r0, #0
 	push {r0}	//r12
 	push {r0}	//r3
 	push {r0}	//r2
@@ -205,7 +205,7 @@ _fault:
 
 _svcall_irq:
 	ldr r0, =self_preempt
-	ldr r1, =1
+	movs r1, #1
 	str r1, [r0]
 	GO_RETP
 
@@ -218,7 +218,7 @@ _systick_irq:
 	//decrease yield counter for all threads
 	ldr r2, =nthr
 	ldr r5, [r2]
-	ldr r4, =0
+	movs r4, #0
 _check_states:
 	movs r0, r4
 	bl _idx_to_thr_ptr
@@ -244,7 +244,7 @@ _systick_init:
 	str r1, [r0]
 	//
 	ldr r0, =SYST_CSR
-	ldr r1, =0x00000003				//enable, interrupt enable
+	movs r1, #0x03	//enable, interrupt enable
 	str r1, [r0]
 	bx lr
 
@@ -269,7 +269,7 @@ _start:
 	cpsid i
 	ldr r0, =.start_data
 	ldr r1, =.end_data
-	ldr r2, =0
+	movs r2, #0
 _zero_data:
 	str r2, [r0]
 	adds r0, #4
@@ -302,17 +302,17 @@ _retp:
 	b _save_ctx
 _skip_switch:
 	//reset skip-thr flag
-	ldr r1, =0
+	movs r1, #0
 	str r1, [r0]
 	b _run_thread
 _save_ctx:
 	//push r4-r7 on PSP stack
-	ldr r0, =2
+	movs r0, #2
 	msr CONTROL, r0
 	isb
 	push {r4-r7}
 	//back to kernel mode
-	ldr r0, =0
+	movs r0, #0
 	msr CONTROL, r0
 	isb
 	//get active thread
@@ -330,18 +330,18 @@ _no_psp_save:
 	ldr r0, [r1,#0]
 	msr PSP, r0
 	//restore its r4-r7 because IRQs don't do that
-	ldr r0, =2
+	movs r0, #2
 	msr CONTROL, r0
 	isb
 	pop {r4-r7}
 	//back to kernel mode
-	ldr r0, =0
+	movs r0, #0
 	msr CONTROL, r0
 	isb
 _run_thread:
 	cpsie i
 	//run thread
-	ldr r0, =0xa0
+	movs r0, #0xa0
 	PENDSVSET
 	dsb
 _wpsv:
@@ -384,10 +384,10 @@ _next_sched_reset_1:
 	//but if thr0 was scheduled before all began, reschedule it
 	cmp r5, #0
 	beq _next_sched_thr0
-	ldr r6, =1
+	movs r6, #1
 	b _next_find_left
 _next_sched_thr0:
-	ldr r6, =0
+	movs r6, #0
 _next_exit:
 	//put ptr in r1
 	movs r0, r6
@@ -425,7 +425,7 @@ _create_thr:
 	//r2 = PSP
 	//populate stack with init values
 	//switch to PSP for fast push
-	ldr r0, =2
+	movs r0, #2
 	msr CONTROL, r0
 	isb
 	msr PSP, r2
@@ -434,7 +434,7 @@ _create_thr:
 	movs r0, r4
 	push {r0}	//PC
 	push {r0}	//LR
-	ldr r0, =0
+	movs r0, #0
 	push {r0}	//r12
 	push {r0}	//r3
 	push {r0}	//r2
@@ -445,7 +445,7 @@ _create_thr:
 	push {r0}	//r5
 	push {r0}	//r4
 	//back to kernel mode
-	ldr r0, =0
+	movs r0, #0
 	msr CONTROL, r0
 	isb
 	//idx to ptr
@@ -467,7 +467,7 @@ rt0s_yield:
 	ldr r0, [r2]
 	//set yield counter
 	bl _thr_set_yield
-	ldr r0, =0xaa
+	movs r0, #0xaa
 	svc 0xaa
 	pop {PC}
 
@@ -478,7 +478,7 @@ rt0s_kill:
 	ldr r0, [r1]
 	//set WAIT_KILL flag
 	bl _thr_set_killed
-	ldr r0, =0xaa
+	movs r0, #0xaa
 	svc 0xaa
 	//we will never come back here
 	pop {PC}
@@ -494,7 +494,7 @@ _rt0s_thr0:
 rt0s_sem_signal:
 	//r0 = sem idx
 	ldr r1, =sems
-	ldr r2, =4
+	movs r2, #4
 	muls r0, r2
 	//read sem value
 	ldr r3, [r0,r1]
@@ -514,7 +514,7 @@ rt0s_sem_wait:
 	ldr r0, [r2]
 	//wait for semaphore
 	bl _thr_sem_wait
-	ldr r0, =0xaa
+	movs r0, #0xaa
 	svc 0xaa
 	pop {PC}
 

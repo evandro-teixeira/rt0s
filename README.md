@@ -18,9 +18,9 @@ See `rt0s.h` file for the function signatures.
 - Static memory usage / no dynamic memory allocation
 - Round-robin pre-emptive scheduling
 - All threads have same priority
-- Thread switch latency = `229.36 + 50.16*(Number of threads created)` cycles
+- Thread switch latency = `192 + 50.4*(Number of threads created)` cycles
 	- For demo board STM32F0308-DISCO with 8MHz crystal, and for `N=10`, the
-	thread latency is 730 cycles / 91.25 microseconds
+	thread latency is 696 cycles / 87 microseconds
 - Interrupts are disabled during thread switching
 
 ### Attempt at a scheduling overview diagram
