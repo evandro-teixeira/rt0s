@@ -258,11 +258,6 @@ _idx_to_thr_ptr:
 	bx lr
 
 .macro PENDSVSET
-	ldr r0, =ICSR
-	ldr r1, [r0]
-	ldr r2, =0x10000000
-	orrs r1, r2
-	str r1, [r0]
 .endm
 
 _start:
@@ -341,8 +336,11 @@ _no_psp_save:
 _run_thread:
 	cpsie i
 	//run thread
-	movs r0, #0xa0
-	PENDSVSET
+	ldr r0, =ICSR
+	ldr r1, [r0]
+	ldr r2, =0x10000000
+	orrs r1, r2
+	str r1, [r0]
 	dsb
 _wpsv:
 	wfi
@@ -467,7 +465,6 @@ rt0s_yield:
 	ldr r0, [r2]
 	//set yield counter
 	bl _thr_set_yield
-	movs r0, #0xaa
 	svc 0xaa
 	pop {PC}
 
@@ -478,7 +475,6 @@ rt0s_kill:
 	ldr r0, [r1]
 	//set WAIT_KILL flag
 	bl _thr_set_killed
-	movs r0, #0xaa
 	svc 0xaa
 	//we will never come back here
 	pop {PC}
@@ -514,7 +510,6 @@ rt0s_sem_wait:
 	ldr r0, [r2]
 	//wait for semaphore
 	bl _thr_sem_wait
-	movs r0, #0xaa
 	svc 0xaa
 	pop {PC}
 
