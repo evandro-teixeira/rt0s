@@ -51,8 +51,7 @@ code uses semaphores and yield function to debounce a button.
 You can add your board into the boards/ folder. Create a folder with your
 board's name and add these files into it:
 - linker.ld: with correct addresses/sizes for flash and RAM.
-- cfg.s: with addresses for SysTick and PendSV registers, and SysTick clock
-frequency.
+- cfg.s: SysTick clock frequency.
 - main.c: actual application code.
 
 Then change the `BOARD` value in Makefile to your board's name, and run `make`.
