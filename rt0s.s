@@ -3,6 +3,11 @@
 
 .include "cfg.s"
 
+.equ SYST_CSR, 0xe000e010	//SysTick control/status register
+.equ SYST_RVR, 0xe000e014	//SysTick reload value
+.equ SYST_CVR, 0xe000e018	//SysTick current value
+.equ ICSR, 0xe000ed04	//to set PendSV to pending
+
 .equ KERN_STACK_SZ, 100
 .equ STACK_SZ, 25*4	//thread stack size (25 words/8 min needed)
 
