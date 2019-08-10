@@ -494,12 +494,14 @@ rt0s_sem_signal:
 	ldr r1, =sems
 	movs r2, #4
 	muls r0, r2
+	cpsid i
 	//read sem value
 	ldr r3, [r0,r1]
 	//increase it
 	adds r3, #1
 	//store back
 	str r3, [r0,r1]
+	cpsie i
 	dmb
 	bx lr
 
